@@ -3,6 +3,8 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 
+export const SCHEME_TOKEN = 'Bearer'
+
 const buildApiDoc = (app, urlPath = 'apidoc') => {
     const config = new DocumentBuilder()
         .setTitle('Base APP')
@@ -10,7 +12,14 @@ const buildApiDoc = (app, urlPath = 'apidoc') => {
         .setVersion('1.0')
         .addTag('Base APP')
         .addServer(process.env.BASE_URL)
-        .addBearerAuth()
+        .addBearerAuth({
+            description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+            name: 'Authorization',
+            bearerFormat: SCHEME_TOKEN,
+            scheme: SCHEME_TOKEN,
+            type: 'http',
+            in: 'Header',
+        })
         .build()
 
     const document = SwaggerModule.createDocument(app, config)
